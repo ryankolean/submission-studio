@@ -1,0 +1,15 @@
+{
+  "name": "submission-studio",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "api"
+  ],
+  "scripts": {
+    "test": "npm run test --workspaces --if-present",
+    "typecheck": "npm run typecheck --workspaces --if-present"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
