@@ -6,7 +6,9 @@ Two-user web app that helps a wedding photographer get published: tracks wedding
 
 ## Status
 
-**Phase:** 0 (Foundation) — not started. Design complete and hardened.
+**Phase:** 0 (Foundation) — in progress. Auth, schema, publication seed, wedding intake, and the inventory dashboard are built and tested. Deployment is not done.
+
+Remaining for Phase 0: deploy the Worker, apply migrations to remote D1, publish the SPA to GitHub Pages, and create the two real users with `npm run seed-user`.
 
 ## Documents
 
@@ -14,13 +16,40 @@ Two-user web app that helps a wedding photographer get published: tracks wedding
 - `docs/phase-0-prompt.md` — the executable Phase 0 implementation brief for Claude Code.
 - `CLAUDE.md` — conventions and directional guidance for Claude Code sessions in this repo.
 
-## Planned structure
+## Structure
 
 ```
 /web   — React + Vite + TS + Tailwind SPA → GitHub Pages
 /api   — Cloudflare Worker (Hono) + D1 + R2 → wrangler
 /docs  — design + implementation briefs
 ```
+
+## Working on it
+
+```
+npm install
+npm test          # 479 tests across both workspaces
+npm run typecheck
+npm run build     # includes a check that no secret reached the SPA bundle
+npm run dev:api   # local Worker on :8787, against local D1
+npm run dev:web   # SPA on :5173
+```
+
+Migrations run with `npm run migrate:local --workspace @submission-studio/api`.
+
+## Users
+
+There is no signup. A user row is created only by an operator with database
+credentials:
+
+```
+npm run seed-user --workspace @submission-studio/api -- \
+  --email someone@example.com --name "Their Name" --role photographer --local
+```
+
+That prints a single-use invite link, valid for seven days, which lets the
+person choose their own password. No email addresses are committed to this
+repository.
 
 ## Non-negotiables
 

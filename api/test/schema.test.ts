@@ -46,11 +46,14 @@ const insertPublication = (id = "p1") =>
     .run(id, id);
 
 describe("migrations", () => {
-  it("creates exactly the eight tables from the design doc, plus nothing else", () => {
+  it("creates exactly the expected tables, and nothing else", () => {
+    // The eight from design doc section 5, plus password_invites, which
+    // migration 0003 adds to support the invite-link password flow.
     expect(tableNames(db)).toEqual([
       "audit_log",
       "credit_requests",
       "packages",
+      "password_invites",
       "publications",
       "submissions",
       "users",

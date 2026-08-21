@@ -25,7 +25,7 @@ Summit Software Solutions product (working name Submission Studio). Two-user wed
    **This repo is public.** Also keep out: the design partner's name or business, her market and inventory details, candid assessments of her, and the partnership or IP terms. Refer to "the design partner" or "the photographer". The unredacted versions live outside the repo.
 2. **Prep + queue only**: no code path may transmit a submission to a publication. No email sending, no form automation, no portal scripting.
 3. **Rights gate is server-side law**: packaging/submission endpoints must reject weddings unless `rights_status = own_contract` AND `consent_status IN (granted, granted_limited)`. `second_shooter` weddings route to credit-recovery only.
-4. **No signup endpoint.** Two seeded users. User creation happens in seed migrations only.
+4. **No signup endpoint.** Two users. A user row is created only by `npm run seed-user` (operator-run, needs D1 credentials), which mints a single-use invite link so the person sets their own password. `POST /auth/set-password` consumes an invite and cannot create a user. No email addresses in the repo.
 5. **Secrets in Wrangler env vars.** Nothing secret in the SPA, ever.
 6. **Exclusivity ledger** (Phase 2+): hard locks are enforced in the API, with every state change written to `audit_log`.
 7. **No emojis in UI or docs.**

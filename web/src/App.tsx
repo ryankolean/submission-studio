@@ -4,6 +4,7 @@ import type { ReactNode } from "react";
 import { PRODUCT_NAME } from "./config.js";
 import { SessionProvider, useSession } from "./session-context.js";
 import { LoginPage } from "./pages/LoginPage.js";
+import { SetPasswordPage } from "./pages/SetPasswordPage.js";
 import { DashboardPage } from "./pages/DashboardPage.js";
 import { IntakePage } from "./pages/IntakePage.js";
 import { PublicationsPage } from "./pages/PublicationsPage.js";
@@ -58,6 +59,7 @@ function Routed() {
     return (
       <Routes>
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/set-password" element={<SetPasswordPage />} />
         <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>
     );
@@ -69,6 +71,7 @@ function Routed() {
         <Route path="/" element={<RequireSession><DashboardPage /></RequireSession>} />
         <Route path="/weddings/new" element={<RequireSession><IntakePage /></RequireSession>} />
         <Route path="/publications" element={<RequireSession><PublicationsPage /></RequireSession>} />
+        <Route path="/set-password" element={<SetPasswordPage />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </Shell>

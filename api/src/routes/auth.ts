@@ -15,6 +15,8 @@ import {
   signRefreshToken,
   verifyRefreshToken,
 } from "../domain/tokens.js";
+import { hashInviteToken, isInviteUsable } from "../domain/invite.js";
+import { checkPasswordPolicy } from "../domain/password-policy.js";
 import type { UserRole } from "../domain/user.js";
 
 interface UserRow extends AuthenticatedUser {
@@ -116,3 +118,68 @@ authRoutes.post("/refresh", async (c) => {
 });
 
 authRoutes.get("/me", requireAuth, (c) => c.json(c.get("user")));
+
+/**
+ * Consumes a single-use invite and sets that user's password.
+ *
+ * Unauthenticated by design: the invite token is the credential, and the user
+ * has no password yet. It cannot create a user, so this is not a signup route
+ * wearing a different hat -- an unmatched token is simply rejected.
+ */
+authRoutes.post("/set-password", async (c) => {
+  const body = await parseJson(c);
+  const token = readString(body, "token");
+  const password = readString(body, "password");
+
+  if (token === null || password === null) {
+    return fail(c, 400, "VALIDATION", "Both token and password are required.");
+  }
+
+  // One message for every unusable invite: unknown, spent, and expired are not
+  // distinguished, so the response cannot be used to probe which tokens exist.
+  const reject = () =>
+    fail(c, 400, "VALIDATION", "That invite link is not valid. Ask for a new one.");
+
+  const invite = await c.env.DB.prepare(
+    `SELECT i.id, i.user_id, i.expires_at, i.used_at, u.email
+     FROM password_invites i
+     JOIN users u ON u.id = i.user_id
+     WHERE i.token_hash = ?`,
+  )
+    .bind(await hashInviteToken(token))
+    .first<{
+      id: string;
+      user_id: string;
+      expires_at: string;
+      used_at: string | null;
+      email: string;
+    }>();
+
+  if (invite === null) return reject();
+  if (!isInviteUsable({ expiresAt: invite.expires_at, usedAt: invite.used_at })) {
+    return reject();
+  }
+
+  const policy = checkPasswordPolicy(password, invite.email);
+  if (!policy.ok) {
+    // The invite is not spent here: the holder proved nothing wrong, they just
+    // chose a weak password, and burning the link would strand them.
+    return fail(c, 400, "VALIDATION", policy.message);
+  }
+
+  const pwHash = await hashPassword(password);
+
+  await c.env.DB.batch([
+    c.env.DB.prepare("UPDATE users SET pw_hash = ? WHERE id = ?").bind(pwHash, invite.user_id),
+    c.env.DB
+      .prepare("UPDATE password_invites SET used_at = ? WHERE id = ? AND used_at IS NULL")
+      .bind(new Date().toISOString(), invite.id),
+    c.env.DB
+      .prepare(
+        "INSERT INTO audit_log (id, user_id, entity, entity_id, action) VALUES (?, ?, 'user', ?, 'set_password')",
+      )
+      .bind(crypto.randomUUID(), invite.user_id, invite.user_id),
+  ]);
+
+  return c.body(null, 204);
+});
