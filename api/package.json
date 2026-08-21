@@ -5,7 +5,10 @@
   "scripts": {
     "test": "vitest run",
     "test:watch": "vitest",
-    "typecheck": "tsc -p tsconfig.json"
+    "typecheck": "tsc -p tsconfig.json",
+    "dev": "wrangler dev",
+    "migrate:local": "wrangler d1 migrations apply submission-studio-db --local",
+    "migrate:remote": "wrangler d1 migrations apply submission-studio-db --remote"
   },
   "devDependencies": {
     "@types/node": "^22.20.1",
