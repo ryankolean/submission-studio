@@ -71,6 +71,20 @@ export function createTestD1(): TestD1 {
   const db = migratedDb();
   return {
     prepare: (query: string) => new ShimStatement(db, query),
+    async batch<T = Record<string, unknown>>(
+      statements: D1PreparedStatement[],
+    ): Promise<D1Result<T>[]> {
+      db.exec("BEGIN");
+      try {
+        const results: D1Result<T>[] = [];
+        for (const statement of statements) results.push(await statement.all<T>());
+        db.exec("COMMIT");
+        return results;
+      } catch (error) {
+        db.exec("ROLLBACK");
+        throw error;
+      }
+    },
     exec: (sql: string) => db.exec(sql),
     close: () => db.close(),
   };

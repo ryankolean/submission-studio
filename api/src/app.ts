@@ -4,6 +4,7 @@ import { cors } from "hono/cors";
 import type { AppContext } from "./middleware/auth.js";
 import { authRoutes } from "./routes/auth.js";
 import { publicationRoutes } from "./routes/publications.js";
+import { weddingRoutes } from "./routes/weddings.js";
 import { fail } from "./errors.js";
 
 /**
@@ -27,6 +28,7 @@ export function createApp() {
 
   app.route("/auth", authRoutes);
   app.route("/publications", publicationRoutes);
+  app.route("/weddings", weddingRoutes);
 
   app.notFound((c) => fail(c, 404, "NOT_FOUND", "No such route."));
 
