@@ -79,7 +79,9 @@ CREATE TABLE IF NOT EXISTS publications (
   id                            TEXT PRIMARY KEY,
   name                          TEXT NOT NULL,
   tier                          TEXT NOT NULL CHECK (tier IN ('primary', 'secondary', 'dream')),
-  method                        TEXT NOT NULL CHECK (method IN ('portal', 'web_form', 'email', 'aggregator')),
+  -- NULL means unknown, as with counts_own_blog_as_published below. Some
+  -- outlets publish no consistent submission route.
+  method                        TEXT CHECK (method IN ('portal', 'web_form', 'email', 'aggregator')),
   submission_url                TEXT,
   contact_email                 TEXT,
   spec_json                     TEXT NOT NULL DEFAULT '{}',

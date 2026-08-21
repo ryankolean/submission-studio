@@ -99,6 +99,17 @@ describe("enum drift between TypeScript unions and D1 CHECK constraints", () => 
     );
   });
 
+  it("publications.method accepts NULL for an outlet with no known route", () => {
+    expect(() =>
+      db
+        .prepare(
+          `INSERT INTO publications (id, name, tier, method, exclusivity_policy, earned_or_paid, last_verified)
+           VALUES ('mnull', 'x', 'primary', NULL, 'unknown', 'earned', '2026-08-21')`,
+        )
+        .run(),
+    ).not.toThrow();
+  });
+
   it("publications.method matches SUBMISSION_METHODS", () => {
     let n = 0;
     acceptsOnly(SUBMISSION_METHODS, (value) =>
