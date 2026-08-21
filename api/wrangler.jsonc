@@ -1,0 +1,23 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "submission-studio-api",
+  "compatibility_date": "2026-08-01",
+  "compatibility_flags": ["nodejs_compat"],
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "submission-studio-db",
+      "database_id": "69460871-0d43-4743-8a75-26f8610d6ec2",
+      "migrations_dir": "migrations"
+    }
+  ],
+  "r2_buckets": [
+    {
+      "binding": "IMAGES",
+      "bucket_name": "submission-studio-images"
+    }
+  ],
+  "observability": {
+    "enabled": true
+  }
+}
