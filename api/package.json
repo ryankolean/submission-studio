@@ -1,5 +1,5 @@
 {
-  "name": "@submission-studio/api",
+  "name": "@publication-studio/api",
   "private": true,
   "type": "module",
   "scripts": {

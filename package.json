@@ -1,5 +1,5 @@
 {
-  "name": "submission-studio",
+  "name": "publication-studio",
   "private": true,
   "type": "module",
   "workspaces": [
@@ -10,8 +10,8 @@
     "test": "npm run test --workspaces --if-present",
     "typecheck": "npm run typecheck --workspaces --if-present",
     "build": "npm run build --workspaces --if-present",
-    "dev:api": "npm run dev --workspace @submission-studio/api",
-    "dev:web": "npm run dev --workspace @submission-studio/web"
+    "dev:api": "npm run dev --workspace @publication-studio/api",
+    "dev:web": "npm run dev --workspace @publication-studio/web"
   },
   "engines": {
     "node": ">=24"

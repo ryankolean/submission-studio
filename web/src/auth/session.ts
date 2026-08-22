@@ -11,7 +11,7 @@ export interface SignInPayload {
   user: SessionUser;
 }
 
-const STORAGE_KEY = "submission-studio.session";
+const STORAGE_KEY = "publication-studio.session";
 
 /** The slice of the Storage API this module uses. Injected so it can be faked. */
 export interface StorageLike {

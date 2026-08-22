@@ -1,7 +1,7 @@
-# Implement: Submission Studio — Phase 0 (Foundation)
+# Implement: Publication Studio — Phase 0 (Foundation)
 
 **Repo:** this repository (see CLAUDE.md bootstrap if no remote exists yet)
-**Reference:** `docs/submission-studio-design.md` (v1.0). This brief is self-sufficient for Phase 0; consult the design doc for rationale and later phases.
+**Reference:** `docs/publication-studio-design.md` (v1.0). This brief is self-sufficient for Phase 0; consult the design doc for rationale and later phases.
 
 ## Overview
 Two-user web app helping a wedding photographer get published: tracks weddings with rights/consent/exclusivity states, encodes per-publication submission specs, and (in later phases) generates prep+queue submission packages a human sends. Stack: React + Vite SPA deployed to GitHub Pages via Actions; Cloudflare Worker API (Hono) + D1 + R2 via Wrangler. Phase 0 delivers the foundation: scaffold, auth, schema, seeded publication database, wedding intake, inventory dashboard.

@@ -1,4 +1,4 @@
-# Submission Studio
+# Publication Studio
 
 A Summit Software Solutions product. Working name — final name TBD.
 
@@ -12,7 +12,7 @@ Remaining for Phase 0: deploy the Worker, apply migrations to remote D1, publish
 
 ## Documents
 
-- `docs/submission-studio-design.md` — full product design v1.0: architecture, data model, state machines, workflows, risks, roadmap. Read this first.
+- `docs/publication-studio-design.md` — full product design v1.0: architecture, data model, state machines, workflows, risks, roadmap. Read this first.
 - `docs/phase-0-prompt.md` — the executable Phase 0 implementation brief for Claude Code.
 - `CLAUDE.md` — conventions and directional guidance for Claude Code sessions in this repo.
 
@@ -35,7 +35,7 @@ npm run dev:api   # local Worker on :8787, against local D1
 npm run dev:web   # SPA on :5173
 ```
 
-Migrations run with `npm run migrate:local --workspace @submission-studio/api`.
+Migrations run with `npm run migrate:local --workspace @publication-studio/api`.
 
 ## Users
 
@@ -43,7 +43,7 @@ There is no signup. A user row is created only by an operator with database
 credentials:
 
 ```
-npm run seed-user --workspace @submission-studio/api -- \
+npm run seed-user --workspace @publication-studio/api -- \
   --email someone@example.com --name "Their Name" --role photographer --local
 ```
 

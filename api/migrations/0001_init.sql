@@ -1,4 +1,4 @@
--- Submission Studio schema v1 -- design doc section 5.
+-- Publication Studio schema v1 -- design doc section 5.
 --
 -- Conventions:
 --   * ids are application-generated UUID text

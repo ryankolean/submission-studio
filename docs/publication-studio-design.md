@@ -1,5 +1,5 @@
-# Submission Studio — Product Design & Development Roadmap
-**Working name:** Submission Studio (alternatives: Pressroom, Featured, The Ledger)
+# Publication Studio — Product Design & Development Roadmap
+**Working name:** Publication Studio (alternatives: Pressroom, Featured, The Ledger)
 **Authors:** Summit Software Solutions, with a wedding photographer as design partner
 **Status:** Hardened design — ready for Phase 0 development
 **Version:** 1.0 — August 16, 2026

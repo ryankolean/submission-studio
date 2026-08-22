@@ -59,12 +59,12 @@ describe("createSession", () => {
   });
 
   it("survives storage holding something that is not json", () => {
-    storage.setItem("submission-studio.session", "{not json");
+    storage.setItem("publication-studio.session", "{not json");
     expect(createSession(storage).getRefreshToken()).toBeNull();
   });
 
   it("ignores a stored value of the wrong shape", () => {
-    storage.setItem("submission-studio.session", JSON.stringify({ nope: 1 }));
+    storage.setItem("publication-studio.session", JSON.stringify({ nope: 1 }));
     expect(createSession(storage).getRefreshToken()).toBeNull();
     expect(createSession(storage).getUser()).toBeNull();
   });

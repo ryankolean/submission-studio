@@ -1,20 +1,20 @@
-# CLAUDE.md — Submission Studio
+# CLAUDE.md — Publication Studio
 
 Guidance for Claude Code sessions working in this repository.
 
 ## What this is
 
-Summit Software Solutions product (working name Submission Studio). Two-user wedding-publication submission tool. Full design: `docs/submission-studio-design.md` (v1.0, hardened). Current implementation brief: `docs/phase-0-prompt.md`.
+Summit Software Solutions product (working name Publication Studio). Two-user wedding-publication submission tool. Full design: `docs/publication-studio-design.md` (v1.0, hardened). Current implementation brief: `docs/phase-0-prompt.md`.
 
 ## First session bootstrap (do this once)
 
-1. If this directory is not yet a GitHub repository remote: `gh repo create ryankolean/submission-studio --public --source=. --push` (confirm repo name with Ryan if he wants the product name instead). The repo is public so GitHub Pages and Actions stay free; see constraint 1 for what that means for content.
+1. If this directory is not yet a GitHub repository remote: `gh repo create ryankolean/publication-studio --public --source=. --push` (confirm repo name with Ryan if he wants the product name instead). The repo is public so GitHub Pages and Actions stay free; see constraint 1 for what that means for content.
 2. Verify `git remote -v` shows origin and `main` is pushed.
 3. Then execute `docs/phase-0-prompt.md` top to bottom.
 
 ## Session protocol
 
-- At session start: read this file, then `docs/submission-studio-design.md` §2 (goals/non-goals), §5 (data model), §6 (state machines), then the current phase prompt in `docs/`.
+- At session start: read this file, then `docs/publication-studio-design.md` §2 (goals/non-goals), §5 (data model), §6 (state machines), then the current phase prompt in `docs/`.
 - Work phase by phase. Do not build ahead of the current phase's scope — later-phase features are explicitly out of scope even if adjacent code makes them tempting.
 - Update the Status section in `README.md` when a phase's definition of done is met.
 - Commit granularly with conventional commits (`feat:`, `fix:`, `chore:`, `docs:`). Push to `main` for Phase 0; feature branches from Phase 1 onward.
