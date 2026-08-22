@@ -6,9 +6,16 @@ Two-user web app that helps a wedding photographer get published: tracks wedding
 
 ## Status
 
-**Phase:** 0 (Foundation) — in progress. Auth, schema, publication seed, wedding intake, and the inventory dashboard are built and tested. Deployment is not done.
+**Phase:** 0 (Foundation) — complete and deployed.
 
-Remaining for Phase 0: deploy the Worker, apply migrations to remote D1, publish the SPA to GitHub Pages, and create the two real users with `npm run seed-user`.
+- SPA: https://ryankolean.github.io/publication-studio/
+- API: a Cloudflare Worker, auth-gated on every route except `/health`
+
+Verified in production: sign-in, the eight seeded publications with their
+specs, and wedding intake showing all three rights-gate outcomes (ready,
+blocked with remedies, credit-recovery only).
+
+Next: Phase 1, the curation board and package generator.
 
 ## Documents
 

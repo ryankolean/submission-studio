@@ -66,7 +66,7 @@ Every spec row carries `last_verified` and gets re-verified before first use and
 [D1 (SQLite)]  [R2 (images)]  [Claude API (Phase 3)]
 ```
 
-- **Frontend:** React + Vite SPA, deployed to GitHub Pages via Actions. Contains zero secrets and zero data. Custom domain via Cloudflare DNS.
+- **Frontend:** React + Vite SPA, deployed to GitHub Pages via Actions. Contains zero secrets and zero data. Served from the project path on github.io for now; a custom domain is deferred to the end of the roadmap (see §12, Phase 4).
 - **API:** Single Cloudflare Worker (Hono router). All reads/writes gated by auth middleware. CORS locked to the Pages origin.
 - **Auth:** Two seeded users. Email + password (bcrypt in D1) issuing short-lived JWT + refresh token. No signup endpoint exists in v1 (attack surface removed). Passwords set via seeded invite links.
 - **Images:** R2 bucket, private. Uploads and reads only via Worker-issued signed URLs (15-min TTL). Only curated, web-size derivatives are stored (matches publication requirements and keeps costs ~zero). Originals stay in the photographer's gallery platform; we store the reference link.
@@ -253,12 +253,13 @@ All mutations audit-logged. All gate logic server-side; the SPA is untrusted.
 
 **Phase 4 — Generalization (when the design partner has ≥1 acceptance):**
 - Multi-tenant data model activation; photographer onboarding-from-website flow (the original "start from any portfolio" requirement); pricing design informed by Published + Pretty / Tea with Jainé comps
+- Custom domain: move the SPA off the github.io project path and the API off workers.dev, onto a domain on Cloudflare DNS, with `workers_dev = false` and `ALLOWED_ORIGIN` updated to match. Deferred here deliberately — it is presentation, and nothing upstream of it is blocked by the current URLs.
 - *Gate:* do not generalize before the tool has produced a real feature for the design partner. Proof first.
 
 ## 13. Open Questions (decisions required)
 
 1. ~~Business terms~~ **SETTLED** between the partners; the terms and remaining paperwork are tracked outside this repository.
-2. **Product name** — pick before the login page exists.
+2. ~~Product name~~ **SETTLED:** Publication Studio. The repository, the Cloudflare resources, and the SPA all carry it.
 3. ~~Gallery platform~~ **SETTLED:** Pic-Time on a custom domain, using invite-token links. No public gallery API → Phase 1 uses link-embed for viewing + manual export of curated web-size selections into R2. Invite-token URLs are treated as secrets: stored server-side only, never client-logged.
 4. **Couple consent language** — does her client contract already grant editorial submission rights, or do we need a per-couple consent form (template needed either way)?
 5. **Brides paid-placement stance** — tool tags earned vs. paid; the *policy* (ever pay?) is the photographer's call.
