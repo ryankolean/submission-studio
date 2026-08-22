@@ -22,7 +22,7 @@ const ORIGIN = "https://ryankolean.github.io";
  * database a developer is using, and so CI starts from nothing every run.
  */
 const STATE_DIR = ".wrangler/smoke-state";
-const DB_NAME = "submission-studio-db";
+const DB_NAME = "publication-studio-db";
 
 const failures = [];
 let checks = 0;

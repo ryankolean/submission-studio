@@ -14,7 +14,7 @@
  */
 import { execFileSync } from "node:child_process";
 
-const DB_NAME = "submission-studio-db";
+const DB_NAME = "publication-studio-db";
 const TOKEN_BYTES = 32;
 const INVITE_TTL_DAYS = 7;
 const ROLES = ["admin", "photographer"];

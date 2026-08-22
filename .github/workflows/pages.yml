@@ -36,7 +36,7 @@ jobs:
           # Pages serves this project site from a subpath, so assets resolve
           # against it. Routing itself is hash-based and needs no rewrite rule.
           VITE_BASE: /publication-studio/
-          VITE_API_BASE_URL: https://submission-studio-api.ryan-kolean.workers.dev
+          VITE_API_BASE_URL: https://publication-studio-api.ryan-kolean.workers.dev
         # Includes the bundle check, which fails the build if any secret or
         # server-side value reached the output.
         run: npm run build --workspace @publication-studio/web
