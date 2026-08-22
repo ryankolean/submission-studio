@@ -15,13 +15,19 @@ export function createApp() {
   const app = new Hono<AppContext>();
 
   // CORS is pinned to the SPA origin; anything else gets no allow-origin header.
-  app.use("*", (c, next) =>
+  //
+  // The origin is read through the callback rather than by wrapping cors() in
+  // another middleware. Wrapping it produced a preflight response with no
+  // headers at all on workerd -- fine in Hono's in-process test harness, fatal
+  // in the browser, since every authenticated request preflights.
+  app.use(
+    "*",
     cors({
-      origin: c.env.ALLOWED_ORIGIN,
+      origin: (origin, c) => (origin === c.env.ALLOWED_ORIGIN ? origin : null),
       allowMethods: ["GET", "POST", "PATCH", "OPTIONS"],
       allowHeaders: ["authorization", "content-type"],
       maxAge: 86400,
-    })(c, next),
+    }),
   );
 
   app.get("/health", (c) => c.json({ status: "ok" }));

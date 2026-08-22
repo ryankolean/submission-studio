@@ -19,7 +19,9 @@
     }
   ],
   "vars": {
-    "ALLOWED_ORIGIN": "http://localhost:5173"
+    // The deployed SPA origin. CORS is pinned to exactly this; local
+    // development overrides it in .dev.vars, which is gitignored.
+    "ALLOWED_ORIGIN": "https://ryankolean.github.io"
   },
   "observability": {
     "enabled": true

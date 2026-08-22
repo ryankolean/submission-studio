@@ -9,7 +9,8 @@
     "dev": "wrangler dev",
     "migrate:local": "wrangler d1 migrations apply submission-studio-db --local",
     "migrate:remote": "wrangler d1 migrations apply submission-studio-db --remote",
-    "seed-user": "node scripts/seed-user.mjs"
+    "seed-user": "node scripts/seed-user.mjs",
+    "test:runtime": "node scripts/runtime-smoke.mjs"
   },
   "devDependencies": {
     "@types/node": "^22.20.1",
