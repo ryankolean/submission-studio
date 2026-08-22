@@ -1,0 +1,57 @@
+name: Deploy SPA to Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# One deploy at a time; a queued run supersedes an older one rather than
+# racing it, but an in-flight deploy is allowed to finish.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+
+      # The full suite gates the deploy: a red build must not reach Pages.
+      - run: npm run typecheck
+      - run: npm test
+
+      - name: Build the SPA
+        env:
+          # Pages serves this project site from a subpath, so assets resolve
+          # against it. Routing itself is hash-based and needs no rewrite rule.
+          VITE_BASE: /submission-studio/
+          VITE_API_BASE_URL: https://submission-studio-api.ryan-kolean.workers.dev
+        # Includes the bundle check, which fails the build if any secret or
+        # server-side value reached the output.
+        run: npm run build --workspace @submission-studio/web
+
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: web/dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
