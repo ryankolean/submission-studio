@@ -11,11 +11,18 @@
  * preflight, empty-body responses, routing and status codes -- are asserted
  * here against `wrangler dev`.
  */
-import { spawn } from "node:child_process";
+import { execFileSync, spawn } from "node:child_process";
 
 const PORT = 8799;
 const BASE = `http://127.0.0.1:${PORT}`;
 const ORIGIN = "https://ryankolean.github.io";
+
+/**
+ * A state directory of its own, so this never reads or writes the local
+ * database a developer is using, and so CI starts from nothing every run.
+ */
+const STATE_DIR = ".wrangler/smoke-state";
+const DB_NAME = "submission-studio-db";
 
 const failures = [];
 let checks = 0;
@@ -23,6 +30,29 @@ let checks = 0;
 function check(name, condition, detail = "") {
   checks++;
   if (!condition) failures.push(`${name}${detail === "" ? "" : ` -- ${detail}`}`);
+}
+
+// Without this the schema is absent and every query fails as a 500, which is
+// how CI first caught this script trusting a database somebody else migrated.
+try {
+  execFileSync(
+    "npx",
+    [
+      "wrangler",
+      "d1",
+      "migrations",
+      "apply",
+      DB_NAME,
+      "--local",
+      "--persist-to",
+      STATE_DIR,
+    ],
+    { stdio: ["ignore", "ignore", "pipe"] },
+  );
+} catch (error) {
+  console.error("Could not migrate the smoke database.");
+  console.error(String(error.stderr ?? error).slice(-1500));
+  process.exit(1);
 }
 
 const wrangler = spawn(
@@ -36,6 +66,8 @@ const wrangler = spawn(
     `ALLOWED_ORIGIN:${ORIGIN}`,
     "--var",
     "JWT_SECRET:runtime-smoke-secret",
+    "--persist-to",
+    STATE_DIR,
   ],
   { stdio: ["ignore", "ignore", "pipe"] },
 );
