@@ -55,6 +55,11 @@ try {
   process.exit(1);
 }
 
+/**
+ * detached, so the whole process group can be signalled. Killing the npx
+ * wrapper alone leaves workerd running with its pipes open, which kept this
+ * script alive forever on a CI runner while exiting cleanly on a laptop.
+ */
 const wrangler = spawn(
   "npx",
   [
@@ -69,7 +74,7 @@ const wrangler = spawn(
     "--persist-to",
     STATE_DIR,
   ],
-  { stdio: ["ignore", "ignore", "pipe"] },
+  { stdio: ["ignore", "ignore", "pipe"], detached: true },
 );
 
 let stderr = "";
@@ -77,15 +82,37 @@ wrangler.stderr.on("data", (chunk) => {
   stderr += String(chunk);
 });
 
+let stopped = false;
 const stop = () => {
-  wrangler.kill("SIGTERM");
+  if (stopped) return;
+  stopped = true;
+  try {
+    // Negative pid signals the group, which is what actually reaches workerd.
+    process.kill(-wrangler.pid, "SIGTERM");
+  } catch {
+    try {
+      wrangler.kill("SIGTERM");
+    } catch {
+      // already gone
+    }
+  }
 };
 
-process.on("exit", stop);
-process.on("SIGINT", () => {
+/** Exits the process outright: lingering child pipes must not hold CI open. */
+const finish = (code) => {
   stop();
-  process.exit(130);
-});
+  process.exit(code);
+};
+
+process.on("SIGINT", () => finish(130));
+
+// A hung runtime should fail the build, not stall it until the job timeout.
+const watchdog = setTimeout(() => {
+  console.error("Runtime smoke timed out after 120s.");
+  console.error(stderr.slice(-2000));
+  finish(1);
+}, 120_000);
+watchdog.unref();
 
 async function waitForReady() {
   for (let attempt = 0; attempt < 60; attempt++) {
@@ -103,8 +130,7 @@ async function waitForReady() {
 if (!(await waitForReady())) {
   console.error("wrangler dev never became ready.");
   console.error(stderr.slice(-2000));
-  stop();
-  process.exit(1);
+  finish(1);
 }
 
 const preflight = (origin) =>
@@ -178,12 +204,11 @@ const preflight = (origin) =>
   check("an unusable invite is rejected", response.status === 400, `got ${response.status}`);
 }
 
-stop();
-
 if (failures.length > 0) {
   console.error(`Runtime smoke failed (${failures.length} of ${checks} checks):`);
   for (const failure of failures) console.error(`  ${failure}`);
-  process.exit(1);
+  finish(1);
 }
 
 console.log(`Runtime smoke passed: ${checks} checks against workerd.`);
+finish(0);
