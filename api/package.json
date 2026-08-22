@@ -10,7 +10,8 @@
     "migrate:local": "wrangler d1 migrations apply publication-studio-db --local",
     "migrate:remote": "wrangler d1 migrations apply publication-studio-db --remote",
     "seed-user": "node scripts/seed-user.mjs",
-    "test:runtime": "node scripts/runtime-smoke.mjs"
+    "test:runtime": "node scripts/runtime-smoke.mjs",
+    "test-account": "node scripts/ensure-test-account.mjs"
   },
   "devDependencies": {
     "@types/node": "^22.20.1",

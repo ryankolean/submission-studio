@@ -51,6 +51,21 @@ That prints a single-use invite link, valid for seven days, which lets the
 person choose their own password. No email addresses are committed to this
 repository.
 
+For a development sign-in, `ensure-test-account.mjs` keeps the credentials in
+1Password instead:
+
+```
+npm run test-account --workspace @publication-studio/api -- --remote
+```
+
+It creates the 1Password item on first run, generating the password there,
+then makes the account match: seeds the user if absent, spends a fresh invite
+through the real endpoint, revokes any other outstanding invite, and confirms
+the credentials sign in. Re-running does nothing if the account already works,
+so it is safe as a precondition for a test run. `--reset` forces a new
+password. The value is never printed, never passed as an argument, and never
+stored outside 1Password.
+
 ## Non-negotiables
 
 - Prep + queue only. This app never sends a submission; a human clicks send.
